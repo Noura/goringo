@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ofMain.h"
-#define GUI_WIDTH 1000
+#define GUI_WIDTH 900
 #define GUI_HEIGHT 600
 
 class testApp : public ofBaseApp {
