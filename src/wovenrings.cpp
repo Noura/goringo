@@ -1,24 +1,25 @@
 #include "wovenrings.h"
 
 #define NUM_VERTICES 128
-#define CENTER1_X 500
-#define CENTER1_Y 100
-#define CENTER2_X 500
-#define CENTER2_Y 340
-#define RING_WIDTH 26
-#define RING_PERIOD 32
-#define COLOR1 0x0088ff
-#define COLOR2 0xff0000
-#define COLOR3 0x0000ff
-#define COLOR4 0xff8800
+#define CENTER1_X 475
+#define CENTER1_Y 300
+#define CENTER2_X 525
+#define CENTER2_Y 300
+#define RING_WIDTH 10
+#define RING_PERIOD 30
+#define COLOR1 0, 100, 200, 230
+#define COLOR2 0, 150, 230, 200
+#define COLOR3 0, 100, 230, 230
+#define COLOR4 25, 100, 200, 200
 #define MAX_RADIUS 700
 
 
 //--------------------------------------------------------------
 void testApp::setup() {
 	radius_ = 0;
-	ofBackground(220, 220, 255);
+	ofBackground(100, 200, 245);
 	ofSetFrameRate(60);
+    ofEnableAlphaBlending();
 }
 
 //--------------------------------------------------------------
@@ -69,24 +70,24 @@ void testApp::draw() {
 	ofFill();
 
 	// center 1 evens
-	ofSetHexColor(COLOR1);
+	ofSetColor(COLOR1);
 	drawRingGroup(CENTER1_X, CENTER1_Y, radius_);
 
 	// center 2 evens
-	ofSetHexColor(COLOR2);
+	ofSetColor(COLOR2);
 	drawRingGroup(CENTER2_X, CENTER2_Y, radius_);
 
 	// center 1 odds
-	ofSetHexColor(COLOR3);
+	ofSetColor(COLOR3);
 	drawRingGroup(CENTER1_X, CENTER1_Y, radius_ - RING_PERIOD);
 
 	// center 2 odds
-	ofSetHexColor(COLOR4);
+	ofSetColor(COLOR4);
 	drawRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD);
 
 	// intersection of center 1 evens and center 2 odds
 	ofSetPolyMode(OF_POLY_WINDING_ABS_GEQ_TWO);
-	ofSetHexColor(COLOR1);
+	ofSetColor(COLOR1);
 	ofBeginShape();
 	createRingGroup(CENTER1_X, CENTER1_Y, radius_);
 	createRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD);
