@@ -1,10 +1,10 @@
 #include "wovenrings.h"
 
 #define NUM_VERTICES 128
-#define CENTER1_X 500
-#define CENTER1_Y 100
-#define CENTER2_X 500
-#define CENTER2_Y 340
+#define CENTER1_X 400
+#define CENTER1_Y 300
+#define CENTER2_X 600
+#define CENTER2_Y 300
 #define RING_WIDTH 26
 #define RING_PERIOD 32
 #define COLOR1 0x0088ff
@@ -13,19 +13,21 @@
 #define COLOR4 0xff8800
 #define MAX_RADIUS 700
 
+const int testApp::sizes_[NUM_SIZES] = {15, 25};
+const int testApp::colors_[NUM_COLORS] = {0xff0000, 0xff8800, 0xeeee00, 0x00ff11, 0x0088ff, 0xee00ee};
 
 //--------------------------------------------------------------
 void testApp::setup() {
 	radius_ = 0;
 	ofBackground(220, 220, 255);
-	ofSetFrameRate(60);
+	ofSetFrameRate(40);
 }
 
 //--------------------------------------------------------------
 void testApp::update() {
-	radius_ += 0.5;
-	if (radius_ >= MAX_RADIUS + 2 * RING_PERIOD)
-		radius_ -= 2 * RING_PERIOD;
+	radius_ += 0.7;
+	if (radius_ >= MAX_RADIUS + NUM_COLORS * RING_PERIOD)
+		radius_ -= NUM_COLORS * RING_PERIOD;
 }
 
 void testApp::createRing(float x, float y, float r1, float r2) {
@@ -52,8 +54,12 @@ void testApp::createRing(float x, float y, float r1, float r2) {
 }
 
 void testApp::createRingGroup(float x, float y, float r) {
+    int s = 0;
+    int c = 0;
 	for (int i = r; i > 0; i -= 2 * RING_PERIOD) {
-		createRing(x, y, i, i - RING_WIDTH);
+        s = (s + 1) % NUM_SIZES;
+        c = (c + 1) % NUM_COLORS;
+		createRing(x, y, i, i - sizes_[s]);
 	}
 }
 
@@ -91,93 +97,6 @@ void testApp::draw() {
 	createRingGroup(CENTER1_X, CENTER1_Y, radius_);
 	createRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD);
 	ofEndShape();
-
-
-
-	/*
-
-	 //------(i)--------------------------------------
-	 //
-	 // 		CSG / ofNextContour
-	 //
-	 // 		with different winding rules, you can even use ofNextContour to
-	 // 		perform constructive solid geometry
-	 //
-	 // 		be careful, the clockwiseness or counter clockwisenss of your multiple
-	 // 		contours matters with these winding rules.
-	 //
-	 // 		for csg ideas, see : http://glprogramming.com/red/chapter11.html
-	 //
-	 // 		info about the winding rules is here:
-	 //		http://glprogramming.com/red/images/Image128.gif
-	 //
-	 ofNoFill();
-	 float radius = 0;
-	 float radiusAdder 	= 0.5f;
-
-	 glPushMatrix();
-
-	 ofSetPolyMode(OF_POLY_WINDING_ODD);
-
-	 ofBeginShape();
-
-	 ofVertex(300,500);
-	 ofVertex(380,550);
-	 ofVertex(300,600);
-
-	 ofNextContour(true);
-
-	 for (int i = 0; i < 20; i++){
-	 float anglef = ((float)i / 19.0f) * TWO_PI;
-	 float x = 340 + 30 * cos(anglef);
-	 float y = 550 + 30 * sin(anglef);
-	 ofVertex(x,y);
-	 radius 	+= radiusAdder;
-	 }
-
-
-	 ofEndShape(true);
-
-	 glTranslatef(100,0,0);
-
-	 ofSetPolyMode(OF_POLY_WINDING_NONZERO);
-	 ofBeginShape();
-
-	 ofVertex(300,500);
-	 ofVertex(380,550);
-	 ofVertex(300,600);
-
-	 ofNextContour(true);
-
-	 for (int i = 0; i < 20; i++){
-	 float anglef = ((float)i / 19.0f) * TWO_PI;
-	 float x = 340 + 30 * cos(anglef);
-	 float y = 550 + 30 * sin(anglef);
-	 ofVertex(x,y);
-	 radius 	+= radiusAdder;
-	 }
-
-	 ofEndShape(true);
-
-	 glTranslatef(100,0,0);
-	 ofSetPolyMode(OF_POLY_WINDING_ABS_GEQ_TWO);
-	 ofBeginShape();
-	 ofVertex(300,500);
-	 ofVertex(380,550);
-	 ofVertex(300,600);
-	 ofNextContour(true);
-
-	 for (int i = 0; i < 20; i++){
-	 float anglef = ((float)i / 19.0f) * TWO_PI;
-	 float x = 340 + 30 * cos(anglef);
-	 float y = 550 + 30 * sin(anglef);
-	 ofVertex(x,y);
-	 radius 	+= radiusAdder;
-	 }
-	 
-	 
-	 ofEndShape(true);
-	 */
 }
 
 //--------------------------------------------------------------
