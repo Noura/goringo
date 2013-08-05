@@ -26,6 +26,7 @@ private:
 	void drawRingGroup(float x, float y, float r);
 
 	float radius_;
+    int time_;
 };
 
 	

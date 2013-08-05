@@ -5,6 +5,8 @@
 #define CENTER1_Y 100
 #define CENTER2_X 500
 #define CENTER2_Y 340
+#define WOBBLE_PERIOD1 1000
+#define WOBBLE_PERIOD2 500
 #define RING_WIDTH 26
 #define RING_PERIOD 32
 #define COLOR1 0x0088ff
@@ -13,16 +15,18 @@
 #define COLOR4 0xff8800
 #define MAX_RADIUS 700
 
-
 //--------------------------------------------------------------
 void testApp::setup() {
 	radius_ = 0;
+    time_ = 0;
 	ofBackground(220, 220, 255);
 	ofSetFrameRate(60);
 }
 
 //--------------------------------------------------------------
 void testApp::update() {
+    time_ += 1;
+
 	radius_ += 0.5;
 	if (radius_ >= MAX_RADIUS + 2 * RING_PERIOD)
 		radius_ -= 2 * RING_PERIOD;
@@ -34,8 +38,9 @@ void testApp::createRing(float x, float y, float r1, float r2) {
 	
 	ofNextContour(true);
 	for (int i = 0; i < NUM_VERTICES; i++) {
-		float vertex_x = x + r1 * cos(angle);
-		float vertex_y = y + r1 * sin(angle);
+        float wobble = .5 * sin(time_ / (float)WOBBLE_PERIOD1) + 1;
+		float vertex_x = x + r1 * cos(angle) * wobble;
+		float vertex_y = y + r1 * sin(angle) / wobble;
 		ofVertex(vertex_x, vertex_y);
 		angle += delta_angle;
 	}
