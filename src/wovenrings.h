@@ -1,8 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
-#define GUI_WIDTH 1000
-#define GUI_HEIGHT 600
+#define GUI_WIDTH 600
+#define GUI_HEIGHT 800
 
 class testApp : public ofBaseApp {
 public:
@@ -21,9 +21,9 @@ public:
 	void gotMessage(ofMessage msg);
 
 private:
-	void createRing(float x, float y, float r1, float r2);
-	void createRingGroup(float x, float y, float r);
-	void drawRingGroup(float x, float y, float r);
+	void createRing(float x, float y, float xr1, float yr1, float xr2, float yr2);
+	void createRingGroup(float x, float y, float r, float wobble);
+	void drawRingGroup(float x, float y, float r, float wobble);
 
 	float radius_;
     int time_;

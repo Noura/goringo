@@ -1,25 +1,24 @@
 #include "wovenrings.h"
 
 #define NUM_VERTICES 128
-#define CENTER1_X 500
-#define CENTER1_Y 100
+#define CENTER1_X 100
+#define CENTER1_Y 600
 #define CENTER2_X 500
-#define CENTER2_Y 340
-#define WOBBLE_PERIOD1 1000
-#define WOBBLE_PERIOD2 500
+#define CENTER2_Y 600
+#define WOBBLE_PERIOD 50
 #define RING_WIDTH 26
-#define RING_PERIOD 32
+#define RING_PERIOD 40
 #define COLOR1 0x0088ff
 #define COLOR2 0xff0000
 #define COLOR3 0x0000ff
 #define COLOR4 0xff8800
-#define MAX_RADIUS 700
+#define MAX_RADIUS 1300
 
 //--------------------------------------------------------------
 void testApp::setup() {
 	radius_ = 0;
     time_ = 0;
-	ofBackground(220, 220, 255);
+	ofBackground(20, 20, 20);
 	ofSetFrameRate(60);
 }
 
@@ -32,41 +31,40 @@ void testApp::update() {
 		radius_ -= 2 * RING_PERIOD;
 }
 
-void testApp::createRing(float x, float y, float r1, float r2) {
+void testApp::createRing(float x, float y, float xr1, float yr1, float xr2, float yr2) {
 	float angle = 0;
 	float delta_angle = TWO_PI / NUM_VERTICES;
-	
-    float wobble = .5 * sin(time_ / (float)WOBBLE_PERIOD1) + 1;
-    
+	    
 	ofNextContour(true);
 	for (int i = 0; i < NUM_VERTICES; i++) {
-		float vertex_x = x + r1 * cos(angle) * wobble;
-		float vertex_y = y + r1 * sin(angle) / wobble;
+		float vertex_x = x + xr1 * cos(angle);
+		float vertex_y = y + yr1 * sin(angle);
 		ofVertex(vertex_x, vertex_y);
 		angle += delta_angle;
 	}
 
-	if (r2 > 0) {
+	if (xr2 > 0 || yr2 > 0) {
 		ofNextContour(true);
 		for (int i = 0; i < NUM_VERTICES; i++) {
-			float vertex_x = x + r2 * cos(angle) * wobble;
-			float vertex_y = y - r2 * sin(angle) / wobble;
+			float vertex_x = x + xr2 * cos(angle);
+			float vertex_y = y - yr2 * sin(angle);
 			ofVertex(vertex_x, vertex_y);
 			angle += delta_angle;
 		}
 	}
 }
 
-void testApp::createRingGroup(float x, float y, float r) {
+void testApp::createRingGroup(float x, float y, float r, float wobble) {
+
 	for (int i = r; i > 0; i -= 2 * RING_PERIOD) {
-		createRing(x, y, i, i - RING_WIDTH);
+		createRing(x, y, i * wobble, i / wobble, (i - RING_WIDTH) * wobble, (i - RING_WIDTH) / wobble);
 	}
 }
 
-void testApp::drawRingGroup(float x, float y, float r) {
+void testApp::drawRingGroup(float x, float y, float r, float wobble) {
 	ofSetPolyMode(OF_POLY_WINDING_NONZERO);
 	ofBeginShape();
-	createRingGroup(x, y, r);
+	createRingGroup(x, y, r, wobble);
 	ofEndShape();
 }
 
@@ -74,28 +72,47 @@ void testApp::drawRingGroup(float x, float y, float r) {
 void testApp::draw() {
 	ofFill();
 
-	// center 1 evens
-	ofSetHexColor(COLOR1);
-	drawRingGroup(CENTER1_X, CENTER1_Y, radius_);
+    int red1 = 255 * (0.5 + 0.5 * sin(time_ / 507.0));
+    int green1 = 255 * (0.5 + 0.5 * (sin(time_ / 619.0)));
+    int blue1 = 255 * (0.5 + 0.5 * (sin(time_ / 190.0)));
+    
+    int red2 = 255 * (0.5 + 0.5 * sin(time_ / 200.0));
+    int green2 = 200 * (0.5 + 0.5 * (sin(time_ / 750.0)));
+    int blue2 = 200 * (0.5 + 0.5 * (sin(time_ / 317.0)));
+
+    int red3 = 200 * (0.5 + 0.5 * sin(time_ / 190.0));
+    int green3 = 200 * (0.5 + 0.5 * (sin(time_ / 210.0)));
+    int blue3 = 255 * (0.5 + 0.5 * (sin(time_ / 190.0)));
+
+    int red4 = 200 * (0.5 + 0.5 * sin(time_ / 200.0));
+    int green4 = 200 * (0.5 + 0.5 * (sin(time_ / 413.0)));
+    int blue4 = 255 * (0.5 + 0.5 * (sin(time_ / 762.0)));
+    
+    float wobble1 = .2 * sin(time_ / (float)WOBBLE_PERIOD) + 1;
+    float wobble2 = 1 / wobble1;
+    
+ 	// center 1 evens
+	ofSetColor(red1, green1, blue1);
+	drawRingGroup(CENTER1_X, CENTER1_Y, radius_, wobble1);
 
 	// center 2 evens
-	ofSetHexColor(COLOR2);
-	drawRingGroup(CENTER2_X, CENTER2_Y, radius_);
+	ofSetColor(red2, green2, blue2);
+	drawRingGroup(CENTER2_X, CENTER2_Y, radius_, wobble2);
 
 	// center 1 odds
-	ofSetHexColor(COLOR3);
-	drawRingGroup(CENTER1_X, CENTER1_Y, radius_ - RING_PERIOD);
+	ofSetColor(red3, green3, blue3);
+	drawRingGroup(CENTER1_X, CENTER1_Y, radius_ - RING_PERIOD, wobble1);
 
 	// center 2 odds
-	ofSetHexColor(COLOR4);
-	drawRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD);
+	ofSetColor(red4, green4, blue4);
+	drawRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD, wobble2);
 
 	// intersection of center 1 evens and center 2 odds
 	ofSetPolyMode(OF_POLY_WINDING_ABS_GEQ_TWO);
-	ofSetHexColor(COLOR1);
+	ofSetColor(red1, green1, blue1);
 	ofBeginShape();
-	createRingGroup(CENTER1_X, CENTER1_Y, radius_);
-	createRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD);
+	createRingGroup(CENTER1_X, CENTER1_Y, radius_, wobble1);
+	createRingGroup(CENTER2_X, CENTER2_Y, radius_ - RING_PERIOD, wobble2);
 	ofEndShape();
 
 
