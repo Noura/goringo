@@ -36,9 +36,10 @@ void testApp::createRing(float x, float y, float r1, float r2) {
 	float angle = 0;
 	float delta_angle = TWO_PI / NUM_VERTICES;
 	
+    float wobble = .5 * sin(time_ / (float)WOBBLE_PERIOD1) + 1;
+    
 	ofNextContour(true);
 	for (int i = 0; i < NUM_VERTICES; i++) {
-        float wobble = .5 * sin(time_ / (float)WOBBLE_PERIOD1) + 1;
 		float vertex_x = x + r1 * cos(angle) * wobble;
 		float vertex_y = y + r1 * sin(angle) / wobble;
 		ofVertex(vertex_x, vertex_y);
@@ -48,8 +49,8 @@ void testApp::createRing(float x, float y, float r1, float r2) {
 	if (r2 > 0) {
 		ofNextContour(true);
 		for (int i = 0; i < NUM_VERTICES; i++) {
-			float vertex_x = x + r2 * cos(angle);
-			float vertex_y = y - r2 * sin(angle);
+			float vertex_x = x + r2 * cos(angle) * wobble;
+			float vertex_y = y - r2 * sin(angle) / wobble;
 			ofVertex(vertex_x, vertex_y);
 			angle += delta_angle;
 		}
