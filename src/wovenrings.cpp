@@ -1,23 +1,23 @@
 #include "wovenrings.h"
 
 #define NUM_VERTICES 128
-#define CENTER1_X 475
+#define CENTER1_X 300
 #define CENTER1_Y 300
-#define CENTER2_X 525
+#define CENTER2_X 700
 #define CENTER2_Y 300
-#define RING_WIDTH 10
+#define RING_WIDTH 15
 #define RING_PERIOD 30
-#define COLOR1 0, 100, 200, 230
-#define COLOR2 0, 150, 230, 200
-#define COLOR3 0, 100, 230, 230
-#define COLOR4 25, 100, 200, 200
+#define COLOR1 255, 225, 115, 255
+#define COLOR2 0, 150, 255, 255
+#define COLOR3 255, 255, 0, 255
+#define COLOR4 50, 220, 255, 255
 #define MAX_RADIUS 700
 
 
 //--------------------------------------------------------------
 void testApp::setup() {
 	radius_ = 0;
-	ofBackground(100, 200, 245);
+	ofBackground(255, 255, 255);
 	ofSetFrameRate(60);
     ofEnableAlphaBlending();
 }
